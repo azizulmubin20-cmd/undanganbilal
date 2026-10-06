@@ -1200,43 +1200,46 @@ a {
         2;
 
 }
-
 /* =========================================================
-   PHOTO 3D
+   PHOTO 3D - RESPONSIVE ALL DEVICES
 ========================================================= */
 
 .photo-section {
 
-    position:
-        relative;
+    position: relative;
+
+    width: 100%;
 
     padding:
-        120px 20px;
+        clamp(70px, 10vw, 120px)
+        12px;
 
     background:
         #080807;
 
-    overflow:
-        hidden;
+    overflow: hidden;
 
     perspective:
         1400px;
 
+    box-sizing: border-box;
+
 }
 
 
-/* GOLD GLOW */
+/* =========================================================
+   GOLD GLOW
+========================================================= */
 
 .photo-glow {
 
-    position:
-        absolute;
+    position: absolute;
 
     width:
-        500px;
+        min(500px, 100vw);
 
     height:
-        500px;
+        min(500px, 100vw);
 
     left:
         50%;
@@ -1245,7 +1248,7 @@ a {
         50%;
 
     transform:
-        translate(-50%,-50%);
+        translate(-50%, -50%);
 
     background:
         radial-gradient(
@@ -1264,7 +1267,7 @@ a {
 
 
 /* =========================================================
-   FOTO UTAMA + FOTO TAMBAHAN
+   PHOTO GALLERY
 ========================================================= */
 
 .photo-gallery {
@@ -1272,32 +1275,46 @@ a {
     position:
         relative;
 
-    width:
-        min(94%, 720px);
-
-    margin:
-        auto;
-
     z-index:
         2;
+
+    width:
+        100%;
+
+    max-width:
+        720px;
+
+    margin:
+        0 auto;
+
+    padding:
+        0;
+
+    box-sizing:
+        border-box;
 
 }
 
 
-/* FOTO UTAMA */
+/* =========================================================
+   FOTO UTAMA
+========================================================= */
 
 .photo-main {
 
     width:
-        min(100%,580px);
+        min(100%, 580px);
 
     margin:
-        0 auto 45px;
+        0 auto
+        clamp(25px, 5vw, 45px);
 
 }
 
 
-/* DUA FOTO BAWAH */
+/* =========================================================
+   FOTO 2 & 3
+========================================================= */
 
 .photo-row {
 
@@ -1305,26 +1322,43 @@ a {
         grid;
 
     grid-template-columns:
-        repeat(2,1fr);
+        repeat(2, minmax(0, 1fr));
 
     gap:
-        25px;
+        clamp(8px, 2.5vw, 20px);
 
     width:
-        100%;
+        min(100%, 580px);
+
+    margin:
+        0 auto;
+
+    box-sizing:
+        border-box;
 
 }
 
 
-/* PHOTO CONTAINER */
+/* =========================================================
+   PHOTO CONTAINER
+========================================================= */
 
 .photo-container {
 
     position:
         relative;
 
+    width:
+        100%;
+
+    min-width:
+        0;
+
     margin:
-        auto;
+        0;
+
+    box-sizing:
+        border-box;
 
     transform-style:
         preserve-3d;
@@ -1342,10 +1376,15 @@ a {
     width:
         100%;
 
+    min-width:
+        0;
+
 }
 
 
-/* SHADOW */
+/* =========================================================
+   SHADOW
+========================================================= */
 
 .photo-shadow {
 
@@ -1359,16 +1398,18 @@ a {
         7%;
 
     bottom:
-        -35px;
+        clamp(-25px, -4vw, -15px);
 
     height:
-        70px;
+        clamp(25px, 5vw, 60px);
 
     background:
         rgba(0,0,0,.85);
 
     filter:
-        blur(28px);
+        blur(
+            clamp(12px, 3vw, 28px)
+        );
 
     transform:
         translateZ(-60px);
@@ -1379,15 +1420,23 @@ a {
 }
 
 
-/* FRAME */
+/* =========================================================
+   FRAME
+========================================================= */
 
 .photo-frame {
 
     position:
         relative;
 
+    width:
+        100%;
+
+    box-sizing:
+        border-box;
+
     padding:
-        12px;
+        clamp(5px, 1.5vw, 12px);
 
     border:
         1px solid
@@ -1427,7 +1476,9 @@ a {
 }
 
 
-/* INNER BORDER */
+/* =========================================================
+   INNER BORDER
+========================================================= */
 
 .photo-frame::before {
 
@@ -1438,7 +1489,7 @@ a {
         absolute;
 
     inset:
-        20px;
+        clamp(7px, 2vw, 20px);
 
     border:
         1px solid
@@ -1456,7 +1507,9 @@ a {
 }
 
 
-/* LIGHT REFLECTION */
+/* =========================================================
+   LIGHT REFLECTION
+========================================================= */
 
 .photo-frame::after {
 
@@ -1488,12 +1541,17 @@ a {
 }
 
 
-/* IMAGE HOLDER */
+/* =========================================================
+   IMAGE HOLDER
+========================================================= */
 
 .photo-frame-inner {
 
     position:
         relative;
+
+    width:
+        100%;
 
     overflow:
         hidden;
@@ -1504,7 +1562,9 @@ a {
 }
 
 
-/* FOTO UTAMA */
+/* =========================================================
+   FOTO UTAMA
+========================================================= */
 
 .photo-main
 .photo-frame img {
@@ -1518,16 +1578,30 @@ a {
     height:
         auto;
 
+    max-width:
+        100%;
+
+    object-fit:
+        contain;
+
 }
 
 
-/* FOTO 2 & 3 */
+/* =========================================================
+   FOTO 2 & 3
+========================================================= */
 
 .photo-small
 .photo-frame-inner {
 
+    width:
+        100%;
+
     aspect-ratio:
         3 / 4;
+
+    overflow:
+        hidden;
 
 }
 
@@ -1544,6 +1618,9 @@ a {
     height:
         100%;
 
+    max-width:
+        100%;
+
     object-fit:
         cover;
 
@@ -1551,7 +1628,7 @@ a {
         center;
 
     transform:
-        scale(1.015);
+        scale(1.01);
 
     transition:
         transform 1.2s
@@ -1560,23 +1637,29 @@ a {
 }
 
 
-/* HOVER */
+/* =========================================================
+   HOVER DESKTOP
+========================================================= */
 
-.photo-frame:hover {
+@media (hover: hover) and (pointer: fine) {
 
-    transform:
-        rotateX(0deg)
-        rotateY(0deg)
-        translateY(-12px)
-        translateZ(45px);
+    .photo-frame:hover {
 
-}
+        transform:
+            rotateX(0deg)
+            rotateY(0deg)
+            translateY(-12px)
+            translateZ(45px);
+
+    }
 
 
-.photo-frame:hover img {
+    .photo-frame:hover img {
 
-    transform:
-        scale(1.05);
+        transform:
+            scale(1.05);
+
+    }
 
 }
 
@@ -1585,12 +1668,12 @@ a {
    MOBILE
 ========================================================= */
 
-@media (max-width:600px) {
+@media (max-width: 600px) {
 
     .photo-section {
 
         padding:
-            90px 15px;
+            80px 8px;
 
     }
 
@@ -1600,35 +1683,66 @@ a {
         width:
             100%;
 
+        max-width:
+            100%;
+
     }
 
+
+    /* FOTO UTAMA */
 
     .photo-main {
 
         width:
             96%;
 
-        margin-bottom:
-            30px;
+        margin:
+            0 auto
+            clamp(20px, 5vw, 30px);
 
     }
 
+
+    /* FOTO 2 & 3 */
 
     .photo-row {
 
-        gap:
-            12px;
+        display:
+            grid !important;
 
-        padding:
-            0 2%;
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr)) !important;
+
+        gap:
+            clamp(6px, 2vw, 12px) !important;
+
+        width:
+            96%;
+
+        margin:
+            0 auto;
 
     }
 
+
+    .photo-row
+    .photo-small {
+
+        width:
+            100%;
+
+        min-width:
+            0;
+
+    }
+
+
+    /* FRAME */
 
     .photo-frame {
 
         padding:
-            7px;
+            clamp(4px, 1.5vw, 7px);
 
     }
 
@@ -1636,7 +1750,7 @@ a {
     .photo-frame::before {
 
         inset:
-            11px;
+            clamp(6px, 2vw, 11px);
 
     }
 
@@ -1645,7 +1759,7 @@ a {
     .photo-frame {
 
         padding:
-            6px;
+            clamp(4px, 1.2vw, 6px);
 
     }
 
@@ -1662,13 +1776,13 @@ a {
     .photo-shadow {
 
         bottom:
-            -20px;
+            -15px;
 
         height:
-            40px;
+            30px;
 
         filter:
-            blur(18px);
+            blur(14px);
 
     }
 
@@ -1676,15 +1790,37 @@ a {
 
 
 /* =========================================================
-   SMALL PHONE
+   HP SANGAT KECIL
 ========================================================= */
 
-@media (max-width:380px) {
+@media (max-width: 360px) {
+
+    .photo-section {
+
+        padding-left:
+            5px;
+
+        padding-right:
+            5px;
+
+    }
+
+
+    .photo-main {
+
+        width:
+            97%;
+
+    }
+
 
     .photo-row {
 
+        width:
+            97%;
+
         gap:
-            8px;
+            5px !important;
 
     }
 
@@ -1692,7 +1828,7 @@ a {
     .photo-frame {
 
         padding:
-            5px;
+            3px;
 
     }
 
@@ -1700,7 +1836,64 @@ a {
     .photo-frame::before {
 
         inset:
-            8px;
+            5px;
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (min-width: 601px)
+and (max-width: 1024px) {
+
+    .photo-gallery {
+
+        width:
+            min(92%, 680px);
+
+    }
+
+
+    .photo-row {
+
+        width:
+            100%;
+
+    }
+
+}
+
+
+/* =========================================================
+   LAYAR BESAR
+========================================================= */
+
+@media (min-width: 1200px) {
+
+    .photo-gallery {
+
+        max-width:
+            760px;
+
+    }
+
+
+    .photo-main {
+
+        max-width:
+            620px;
+
+    }
+
+
+    .photo-row {
+
+        max-width:
+            620px;
 
     }
 
