@@ -221,60 +221,116 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* =========================
-       SUBTLE PARALLAX
-    ========================= */
+   SUBTLE PARALLAX
+========================= */
 
-    const heroBackground =
-        document.querySelector('.hero-background');
+const heroBackground =
+    document.querySelector('.hero-background');
 
-    const heroPhoto =
-        document.querySelector('.photo-container');
+const photoContainers =
+    document.querySelectorAll('.photo-container');
 
-    let ticking = false;
+let ticking = false;
 
-    function updateParallax() {
 
-        const scrollY = window.scrollY;
+function updateParallax() {
 
-        if (heroBackground) {
+    const scrollY =
+        window.scrollY;
 
-            const heroMove = scrollY * 0.08;
 
-            heroBackground.style.transform =
-                `translate3d(0, ${heroMove}px, 0) scale(1.045)`;
-        }
+    /* HERO - TETAP SEPERTI ASLI */
 
-        if (heroPhoto) {
+    if (heroBackground) {
 
-            const photoMove = scrollY * 0.035;
+        const heroMove =
+            scrollY * 0.08;
 
-            heroPhoto.style.transform =
-                `translate3d(0, ${photoMove}px, 0)`;
-        }
+        heroBackground.style.transform =
+            `translate3d(0, ${heroMove}px, 0) scale(1.045)`;
 
-        ticking = false;
     }
 
-    function requestParallax() {
 
-        if (!ticking) {
+    /* SEMUA FOTO */
 
-            window.requestAnimationFrame(
-                updateParallax
-            );
+    if (window.innerWidth > 600) {
 
-            ticking = true;
-        }
+        photoContainers.forEach(
+            (photo, index) => {
+
+                const rect =
+                    photo.getBoundingClientRect();
+
+                if (
+                    rect.top < window.innerHeight &&
+                    rect.bottom > 0
+                ) {
+
+                    const distance =
+                        rect.top -
+                        window.innerHeight / 2;
+
+                    const speed =
+                        index === 0
+                            ? 0.035
+                            : 0.02;
+
+                    const photoMove =
+                        distance * speed;
+
+                    photo.style.transform =
+                        `translate3d(0, ${photoMove}px, 0)`;
+
+                }
+
+            }
+        );
+
+    } else {
+
+        photoContainers.forEach(
+            photo => {
+
+                photo.style.transform =
+                    'translate3d(0,0,0)';
+
+            }
+        );
+
     }
 
-    window.addEventListener(
-        'scroll',
-        requestParallax,
-        { passive: true }
-    );
 
-    updateParallax();
+    ticking = false;
 
+}
+
+
+function requestParallax() {
+
+    if (!ticking) {
+
+        window.requestAnimationFrame(
+            updateParallax
+        );
+
+        ticking = true;
+
+    }
+
+}
+
+
+window.addEventListener(
+    'scroll',
+    requestParallax,
+    {
+        passive: true
+    }
+);
+
+
+updateParallax();
     /* =========================
        RESIZE
     ========================= */

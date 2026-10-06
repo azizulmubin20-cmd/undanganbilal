@@ -1201,7 +1201,6 @@ a {
 
 }
 
-
 /* =========================================================
    PHOTO 3D
 ========================================================= */
@@ -1225,6 +1224,8 @@ a {
 
 }
 
+
+/* GOLD GLOW */
 
 .photo-glow {
 
@@ -1256,16 +1257,71 @@ a {
     filter:
         blur(30px);
 
+    pointer-events:
+        none;
+
 }
 
 
-.photo-container {
+/* =========================================================
+   FOTO UTAMA + FOTO TAMBAHAN
+========================================================= */
+
+.photo-gallery {
 
     position:
         relative;
 
     width:
-        min(90%,580px);
+        min(94%, 720px);
+
+    margin:
+        auto;
+
+    z-index:
+        2;
+
+}
+
+
+/* FOTO UTAMA */
+
+.photo-main {
+
+    width:
+        min(100%,580px);
+
+    margin:
+        0 auto 45px;
+
+}
+
+
+/* DUA FOTO BAWAH */
+
+.photo-row {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:
+        25px;
+
+    width:
+        100%;
+
+}
+
+
+/* PHOTO CONTAINER */
+
+.photo-container {
+
+    position:
+        relative;
 
     margin:
         auto;
@@ -1278,6 +1334,18 @@ a {
 
 }
 
+
+/* FOTO KECIL */
+
+.photo-small {
+
+    width:
+        100%;
+
+}
+
+
+/* SHADOW */
 
 .photo-shadow {
 
@@ -1305,8 +1373,13 @@ a {
     transform:
         translateZ(-60px);
 
+    pointer-events:
+        none;
+
 }
 
+
+/* FRAME */
 
 .photo-frame {
 
@@ -1354,6 +1427,8 @@ a {
 }
 
 
+/* INNER BORDER */
+
 .photo-frame::before {
 
     content:
@@ -1380,6 +1455,8 @@ a {
 
 }
 
+
+/* LIGHT REFLECTION */
 
 .photo-frame::after {
 
@@ -1411,6 +1488,8 @@ a {
 }
 
 
+/* IMAGE HOLDER */
+
 .photo-frame-inner {
 
     position:
@@ -1425,6 +1504,9 @@ a {
 }
 
 
+/* FOTO UTAMA */
+
+.photo-main
 .photo-frame img {
 
     display:
@@ -1436,6 +1518,38 @@ a {
     height:
         auto;
 
+}
+
+
+/* FOTO 2 & 3 */
+
+.photo-small
+.photo-frame-inner {
+
+    aspect-ratio:
+        3 / 4;
+
+}
+
+
+.photo-small
+.photo-frame img {
+
+    display:
+        block;
+
+    width:
+        100%;
+
+    height:
+        100%;
+
+    object-fit:
+        cover;
+
+    object-position:
+        center;
+
     transform:
         scale(1.015);
 
@@ -1445,6 +1559,8 @@ a {
 
 }
 
+
+/* HOVER */
 
 .photo-frame:hover {
 
@@ -1464,6 +1580,131 @@ a {
 
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width:600px) {
+
+    .photo-section {
+
+        padding:
+            90px 15px;
+
+    }
+
+
+    .photo-gallery {
+
+        width:
+            100%;
+
+    }
+
+
+    .photo-main {
+
+        width:
+            96%;
+
+        margin-bottom:
+            30px;
+
+    }
+
+
+    .photo-row {
+
+        gap:
+            12px;
+
+        padding:
+            0 2%;
+
+    }
+
+
+    .photo-frame {
+
+        padding:
+            7px;
+
+    }
+
+
+    .photo-frame::before {
+
+        inset:
+            11px;
+
+    }
+
+
+    .photo-small
+    .photo-frame {
+
+        padding:
+            6px;
+
+    }
+
+
+    .photo-small
+    .photo-frame-inner {
+
+        aspect-ratio:
+            3 / 4;
+
+    }
+
+
+    .photo-shadow {
+
+        bottom:
+            -20px;
+
+        height:
+            40px;
+
+        filter:
+            blur(18px);
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL PHONE
+========================================================= */
+
+@media (max-width:380px) {
+
+    .photo-row {
+
+        gap:
+            8px;
+
+    }
+
+
+    .photo-frame {
+
+        padding:
+            5px;
+
+    }
+
+
+    .photo-frame::before {
+
+        inset:
+            8px;
+
+    }
+
+}
 
 /* =========================================================
    EVENT
