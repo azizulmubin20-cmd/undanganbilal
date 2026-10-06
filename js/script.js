@@ -1,646 +1,290 @@
-document.addEventListener("DOMContentLoaded", () => {
+// js/script.js
 
-    const openingScreen =
-        document.getElementById("openingScreen");
+document.addEventListener('DOMContentLoaded', () => {
 
-    const openingCard =
-        document.getElementById("openingCard");
+    /* =========================
+       ELEMENTS
+    ========================= */
 
-    const openInvitation =
-        document.getElementById("openInvitation");
+    const opening = document.getElementById('opening');
+    const openButton = document.getElementById('openInvitation');
+    const music = document.getElementById('backgroundMusic');
 
-    const mainContent =
-        document.getElementById("mainContent");
-
-    const music =
-        document.getElementById("backgroundMusic");
-
-    const musicButton =
-        document.getElementById("musicButton");
-
-    const hero =
-        document.querySelector(".hero");
-
-    const heroBg =
-        document.querySelector(".hero-bg");
-
-    const heroContent =
-        document.querySelector(".hero-content");
-
-    const heroTitle =
-        document.getElementById("heroTitle");
-
-    const photoWrapper =
-        document.getElementById("photoWrapper");
-
-
-    /* =====================================================
-       INITIAL
-    ===================================================== */
-
-    document.body.classList.add("locked");
-
-
-    /* =====================================================
+    /* =========================
        OPEN INVITATION
-    ===================================================== */
+    ========================= */
 
-    openInvitation.addEventListener("click", async () => {
+    if (openButton && opening) {
 
-        openingScreen.classList.add("hide");
+        openButton.addEventListener('click', () => {
 
-        mainContent.classList.add("show");
+            openButton.disabled = true;
+            opening.classList.add('hide');
 
-        document.body.classList.remove("locked");
+            document.documentElement.style.scrollBehavior = 'auto';
 
-        if (music) {
+            window.scrollTo({
+                top: 0,
+                behavior: 'instant'
+            });
 
-            music.volume = 0.35;
+            setTimeout(() => {
+                opening.style.display = 'none';
+                document.documentElement.style.scrollBehavior = '';
+            }, 1300);
 
-            try {
+            if (music) {
+                music.volume = 0.35;
 
-                await music.play();
+                const playPromise = music.play();
 
-                musicButton.classList.add("playing");
-
-            } catch (error) {
-
-                console.log(
-                    "Browser memblokir autoplay:",
-                    error
-                );
-
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {});
+                }
             }
-
-        }
-
-    });
-
-
-    /* =====================================================
-       MUSIC CONTROL
-    ===================================================== */
-
-    musicButton.addEventListener("click", async () => {
-
-        if (!music) return;
-
-        if (music.paused) {
-
-            try {
-
-                await music.play();
-
-                musicButton.classList.add("playing");
-
-            } catch (error) {
-
-                console.log(error);
-
-            }
-
-        } else {
-
-            music.pause();
-
-            musicButton.classList.remove("playing");
-
-        }
-
-    });
-
-
-    /* =====================================================
-       COUNTDOWN
-    ===================================================== */
-
-    const targetDate =
-        new Date(
-            "2026-10-11T09:00:00+07:00"
-        ).getTime();
-
-
-    function updateCountdown() {
-
-        const now =
-            new Date().getTime();
-
-        let distance =
-            targetDate - now;
-
-
-        if (distance <= 0) {
-
-            distance = 0;
-
-        }
-
-
-        const days =
-            Math.floor(
-                distance /
-                (1000 * 60 * 60 * 24)
-            );
-
-        const hours =
-            Math.floor(
-                (distance %
-                    (1000 * 60 * 60 * 24)) /
-                (1000 * 60 * 60)
-            );
-
-        const minutes =
-            Math.floor(
-                (distance %
-                    (1000 * 60 * 60)) /
-                (1000 * 60)
-            );
-
-        const seconds =
-            Math.floor(
-                (distance %
-                    (1000 * 60)) /
-                1000
-            );
-
-
-        document.getElementById("days")
-            .textContent =
-            String(days).padStart(2, "0");
-
-        document.getElementById("hours")
-            .textContent =
-            String(hours).padStart(2, "0");
-
-        document.getElementById("minutes")
-            .textContent =
-            String(minutes).padStart(2, "0");
-
-        document.getElementById("seconds")
-            .textContent =
-            String(seconds).padStart(2, "0");
-
+        });
     }
 
+    /* =========================
+       CINEMATIC REVEAL
+    ========================= */
 
-    updateCountdown();
+    const revealElements = document.querySelectorAll('.reveal');
 
-    setInterval(
-        updateCountdown,
-        1000
-    );
+    revealElements.forEach((element, index) => {
 
+        const parent = element.parentElement;
 
-    /* =====================================================
-       SCROLL REVEAL
-    ===================================================== */
+        if (!parent) return;
 
-    const revealElements =
-        document.querySelectorAll(
-            ".reveal, .reveal-3d"
+        const siblings = [...parent.children]
+            .filter(child => child.classList.contains('reveal'));
+
+        const siblingIndex = siblings.indexOf(element);
+
+        const delay = Math.min(
+            Math.max(siblingIndex, 0) * 90,
+            340
         );
 
-
-    const revealObserver =
-        new IntersectionObserver(
-            (entries) => {
-
-                entries.forEach(entry => {
-
-                    if (entry.isIntersecting) {
-
-                        entry.target.classList.add(
-                            "active"
-                        );
-
-                    }
-
-                });
-
-            },
-            {
-                threshold: 0.12,
-                rootMargin: "0px 0px -50px 0px"
-            }
+        element.style.setProperty(
+            '--reveal-delay',
+            `${delay}ms`
         );
-
-
-    revealElements.forEach(element => {
-
-        revealObserver.observe(element);
-
     });
 
+    const revealObserver = new IntersectionObserver(
+        entries => {
 
-    /* =====================================================
-       HERO PARALLAX
-    ===================================================== */
+            entries.forEach(entry => {
 
-    let ticking = false;
+                if (!entry.isIntersecting) return;
 
+                entry.target.classList.add('visible');
 
-    function updateParallax() {
-
-        const scrollY =
-            window.scrollY;
-
-        if (hero && heroBg) {
-
-            const heroRect =
-                hero.getBoundingClientRect();
-
-            const progress =
-                heroRect.top / window.innerHeight;
-
-
-            if (
-                heroRect.bottom > 0 &&
-                heroRect.top < window.innerHeight
-            ) {
-
-                const movement =
-                    scrollY * 0.18;
-
-                heroBg.style.transform =
-                    `scale(1.08) translate3d(0, ${movement}px, 0)`;
-
-                if (heroContent) {
-
-                    heroContent.style.transform =
-                        `translate3d(0, ${scrollY * 0.08}px, 0)`;
-
-                }
-
-                if (photoWrapper) {
-
-                    photoWrapper.style.setProperty(
-                        "--scroll-progress",
-                        progress
-                    );
-
-                }
-
-            }
-
-        }
-
-        ticking = false;
-
-    }
-
-
-    window.addEventListener(
-        "scroll",
-        () => {
-
-            if (!ticking) {
-
-                window.requestAnimationFrame(
-                    updateParallax
-                );
-
-                ticking = true;
-
-            }
+                revealObserver.unobserve(entry.target);
+            });
 
         },
         {
-            passive: true
+            threshold: 0.08,
+            rootMargin: '0px 0px -70px 0px'
         }
     );
 
+    revealElements.forEach(element => {
+        revealObserver.observe(element);
+    });
 
-    /* =====================================================
-       PHOTO 3D TILT
-    ===================================================== */
+    /* =========================
+       COUNTDOWN
+    ========================= */
 
-    if (
-        photoWrapper &&
-        window.matchMedia("(pointer:fine)").matches
-    ) {
+    const targetDate = new Date(
+        'October 11, 2026 09:00:00 GMT+0700'
+    ).getTime();
 
-        photoWrapper.addEventListener(
-            "mousemove",
-            (event) => {
+    const daysElement = document.getElementById('days');
+    const hoursElement = document.getElementById('hours');
+    const minutesElement = document.getElementById('minutes');
+    const secondsElement = document.getElementById('seconds');
 
-                const rect =
-                    photoWrapper.getBoundingClientRect();
+    function updateCountdown() {
 
-                const x =
-                    event.clientX -
-                    rect.left;
+        const now = Date.now();
+        const distance = targetDate - now;
 
-                const y =
-                    event.clientY -
-                    rect.top;
+        if (distance <= 0) {
 
-                const centerX =
-                    rect.width / 2;
+            if (daysElement) daysElement.textContent = '00';
+            if (hoursElement) hoursElement.textContent = '00';
+            if (minutesElement) minutesElement.textContent = '00';
+            if (secondsElement) secondsElement.textContent = '00';
 
-                const centerY =
-                    rect.height / 2;
+            return;
+        }
 
-                const rotateY =
-                    ((x - centerX) /
-                        centerX) * 8;
-
-                const rotateX =
-                    ((centerY - y) /
-                        centerY) * 8;
-
-
-                photoWrapper.querySelector(
-                    ".photo-frame"
-                ).style.transform =
-                    `
-                    translateZ(30px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    scale(1.02)
-                    `;
-
-            }
+        const days = Math.floor(
+            distance / (1000 * 60 * 60 * 24)
         );
 
-
-        photoWrapper.addEventListener(
-            "mouseleave",
-            () => {
-
-                photoWrapper.querySelector(
-                    ".photo-frame"
-                ).style.transform =
-                    `
-                    translateZ(30px)
-                    rotateX(0deg)
-                    rotateY(0deg)
-                    scale(1)
-                    `;
-
-            }
+        const hours = Math.floor(
+            (distance / (1000 * 60 * 60)) % 24
         );
 
+        const minutes = Math.floor(
+            (distance / (1000 * 60)) % 60
+        );
+
+        const seconds = Math.floor(
+            (distance / 1000) % 60
+        );
+
+        if (daysElement) {
+            daysElement.textContent =
+                String(days).padStart(2, '0');
+        }
+
+        if (hoursElement) {
+            hoursElement.textContent =
+                String(hours).padStart(2, '0');
+        }
+
+        if (minutesElement) {
+            minutesElement.textContent =
+                String(minutes).padStart(2, '0');
+        }
+
+        if (secondsElement) {
+            secondsElement.textContent =
+                String(seconds).padStart(2, '0');
+        }
     }
 
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
 
-    /* =====================================================
-       OPENING CARD TILT
-    ===================================================== */
-
-    if (
-        openingCard &&
-        window.matchMedia("(pointer:fine)").matches
-    ) {
-
-        openingCard.addEventListener(
-            "mousemove",
-            (event) => {
-
-                const rect =
-                    openingCard.getBoundingClientRect();
-
-                const x =
-                    event.clientX -
-                    rect.left;
-
-                const y =
-                    event.clientY -
-                    rect.top;
-
-                const rotateY =
-                    ((x - rect.width / 2) /
-                        (rect.width / 2)) * 5;
-
-                const rotateX =
-                    ((rect.height / 2 - y) /
-                        (rect.height / 2)) * 5;
-
-
-                openingCard.style.animation =
-                    "none";
-
-                openingCard.style.transform =
-                    `
-                    perspective(1200px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    translateZ(50px)
-                    `;
-
-            }
-        );
-
-
-        openingCard.addEventListener(
-            "mouseleave",
-            () => {
-
-                openingCard.style.animation =
-                    "";
-
-                openingCard.style.transform =
-                    `
-                    perspective(1200px)
-                    rotateX(3deg)
-                    translateZ(40px)
-                    `;
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       HERO TITLE TILT
-    ===================================================== */
-
-    if (
-        hero &&
-        heroTitle &&
-        window.matchMedia("(pointer:fine)").matches
-    ) {
-
-        hero.addEventListener(
-            "mousemove",
-            (event) => {
-
-                const rect =
-                    hero.getBoundingClientRect();
-
-                const x =
-                    event.clientX -
-                    rect.left;
-
-                const y =
-                    event.clientY -
-                    rect.top;
-
-                const rotateY =
-                    ((x - rect.width / 2) /
-                        (rect.width / 2)) * 3;
-
-                const rotateX =
-                    ((rect.height / 2 - y) /
-                        (rect.height / 2)) * 3;
-
-
-                heroTitle.style.transform =
-                    `
-                    translateZ(40px)
-                    rotateX(${rotateX}deg)
-                    rotateY(${rotateY}deg)
-                    `;
-
-            }
-        );
-
-
-        hero.addEventListener(
-            "mouseleave",
-            () => {
-
-                heroTitle.style.transform =
-                    "translateZ(0)";
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
+    /* =========================
        COPY ACCOUNT
-    ===================================================== */
+    ========================= */
 
-    const copyButtons =
-        document.querySelectorAll(
-            ".copy-button"
-        );
-
+    const copyButtons = document.querySelectorAll('.copy-btn');
+    const toast = document.getElementById('toast');
 
     copyButtons.forEach(button => {
 
-        button.addEventListener(
-            "click",
-            async () => {
+        button.addEventListener('click', async () => {
 
-                const value =
-                    button.dataset.copy;
+            const value = button.dataset.copy;
 
-                if (!value) return;
+            if (!value) return;
 
+            try {
 
-                try {
+                await navigator.clipboard.writeText(value);
 
-                    await navigator.clipboard.writeText(
-                        value
-                    );
+                showToast('Berhasil disalin');
 
-                    const oldText =
-                        button.textContent;
+            } catch (error) {
 
-                    button.textContent =
-                        "COPIED";
+                const textarea =
+                    document.createElement('textarea');
 
-                    button.style.background =
-                        "var(--gold-light)";
+                textarea.value = value;
+                textarea.style.position = 'fixed';
+                textarea.style.opacity = '0';
 
-                    button.style.color =
-                        "#000";
+                document.body.appendChild(textarea);
 
+                textarea.select();
+                document.execCommand('copy');
 
-                    setTimeout(() => {
+                textarea.remove();
 
-                        button.textContent =
-                            oldText;
-
-                        button.style.background =
-                            "";
-
-                        button.style.color =
-                            "";
-
-                    }, 1500);
-
-
-                } catch (error) {
-
-                    const input =
-                        document.createElement(
-                            "input"
-                        );
-
-                    input.value = value;
-
-                    document.body.appendChild(
-                        input
-                    );
-
-                    input.select();
-
-                    document.execCommand(
-                        "copy"
-                    );
-
-                    input.remove();
-
-                    button.textContent =
-                        "COPIED";
-
-                    setTimeout(() => {
-
-                        button.textContent =
-                            "COPY";
-
-                    }, 1500);
-
-                }
-
+                showToast('Berhasil disalin');
             }
-        );
-
+        });
     });
 
+    function showToast(message) {
 
-    /* =====================================================
-       IMAGE LOAD
-    ===================================================== */
+        if (!toast) return;
 
-    const images =
-        document.querySelectorAll("img");
+        toast.textContent = message;
+        toast.classList.add('show');
 
-    images.forEach(image => {
+        clearTimeout(window.toastTimer);
 
-        image.addEventListener(
-            "load",
-            () => {
+        window.toastTimer = setTimeout(() => {
+            toast.classList.remove('show');
+        }, 2200);
+    }
 
-                image.classList.add(
-                    "loaded"
-                );
+    /* =========================
+       SUBTLE PARALLAX
+    ========================= */
 
-            }
-        );
+    const heroBackground =
+        document.querySelector('.hero-background');
 
-    });
+    const heroPhoto =
+        document.querySelector('.photo-container');
 
+    let ticking = false;
 
-    /* =====================================================
-       PAGE LOAD
-    ===================================================== */
+    function updateParallax() {
+
+        const scrollY = window.scrollY;
+
+        if (heroBackground) {
+
+            const heroMove = scrollY * 0.08;
+
+            heroBackground.style.transform =
+                `translate3d(0, ${heroMove}px, 0) scale(1.045)`;
+        }
+
+        if (heroPhoto) {
+
+            const photoMove = scrollY * 0.035;
+
+            heroPhoto.style.transform =
+                `translate3d(0, ${photoMove}px, 0)`;
+        }
+
+        ticking = false;
+    }
+
+    function requestParallax() {
+
+        if (!ticking) {
+
+            window.requestAnimationFrame(
+                updateParallax
+            );
+
+            ticking = true;
+        }
+    }
 
     window.addEventListener(
-        "load",
+        'scroll',
+        requestParallax,
+        { passive: true }
+    );
+
+    updateParallax();
+
+    /* =========================
+       RESIZE
+    ========================= */
+
+    window.addEventListener(
+        'resize',
         () => {
-
-            setTimeout(() => {
-
-                updateParallax();
-
-            }, 100);
-
-        }
+            updateParallax();
+        },
+        { passive: true }
     );
 
 });
